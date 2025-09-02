@@ -18,13 +18,13 @@ import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Store, Mail, Lock, Wallet, Github } from "lucide-react";
 import { useRouter } from "next/navigation";
+type TelegramAuthData = Record<string, string>;
 
 export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-
-  async function handleAuth(data: any) {
-    // POST the Telegram data to your API for validation
+  //@ts-ignore
+  async function handleAuth(data) {
     const res = await fetch("/api/auth/telegram", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -142,6 +142,16 @@ export default function LoginPage() {
                       <Github className="h-4 w-4 mr-2" />
                       GitHub
                     </Button>
+                    {/* Telegram Auth */}{" "}
+                    <div className="flex justify-center mt-6">
+                      {" "}
+                      <LoginButton
+                        botUsername="LovepreetSingh_bot"
+                        onAuthCallback={handleAuth}
+                        buttonSize="large"
+                        showAvatar
+                      />{" "}
+                    </div>
                   </div>
                 </div>
               </CardContent>
