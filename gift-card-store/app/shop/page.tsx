@@ -135,6 +135,7 @@ export default function ShopPage() {
                   <ProductCard
                     key={giftCard.id}
                     giftCard={giftCard}
+                    //@ts-ignore
                     onAddToCart={giftCard}
                   />
                 ))}
