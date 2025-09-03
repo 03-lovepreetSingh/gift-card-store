@@ -5,9 +5,9 @@ import jwt from "jsonwebtoken";
 import { serialize } from "cookie";
 
 const validator = new AuthDataValidator({
-  botToken: process.env.TELEGRAM_BOT_TOKEN || "",
+  botToken: process.env.TELEGRAM_BOT_TOKEN,
 });
-
+console.log("Using bot token:", process.env.TELEGRAM_BOT_TOKEN);
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

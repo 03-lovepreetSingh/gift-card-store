@@ -31,7 +31,18 @@ export default function LoginPage() {
       body: JSON.stringify(data),
       credentials: "same-origin",
     });
-
+    useEffect(() => {
+      const script = document.createElement("script");
+      script.src = "https://telegram.org/js/telegram-widget.js?22";
+      script.async = true;
+      script.setAttribute(
+        "data-telegram-login",
+        process.env.NEXT_PUBLIC_BOT_USERNAME!
+      );
+      script.setAttribute("data-size", "large");
+      script.setAttribute("data-auth-url", "/api/auth/telegram"); // ✅ Next.js API route
+      document.getElementById("telegram-login")?.appendChild(script);
+    }, []);
     if (res.ok) router.push("/");
     else alert("Login failed");
   }
@@ -145,12 +156,7 @@ export default function LoginPage() {
                     {/* Telegram Auth */}{" "}
                     <div className="flex justify-center mt-6">
                       {" "}
-                      <LoginButton
-                        botUsername="LovepreetSingh_bot"
-                        onAuthCallback={handleAuth}
-                        buttonSize="large"
-                        showAvatar
-                      />{" "}
+                      <div id="telegram-login"></div>{" "}
                     </div>
                   </div>
                 </div>

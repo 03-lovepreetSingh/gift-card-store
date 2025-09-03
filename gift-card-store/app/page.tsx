@@ -9,6 +9,7 @@ import { mockGiftCards } from "@/lib/mockData";
 import { ArrowRight, Shield, Zap, Globe, Star } from "lucide-react";
 
 export default function HomePage() {
+  console.log("Rendering HomePage", process.env.NEXT_PUBLIC_DATABASE_URL);
   const featuredCards = mockGiftCards
     .filter((card) => card.isPopular)
     .slice(0, 4);
