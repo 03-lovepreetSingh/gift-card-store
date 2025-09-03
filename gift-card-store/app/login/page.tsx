@@ -24,33 +24,32 @@ export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   //@ts-ignore
-  async function handleAuth(data) {
-    const res = await fetch("/api/auth/telegram", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-      credentials: "same-origin",
-    });
-    useEffect(() => {
-      const script = document.createElement("script");
-      script.src = "https://telegram.org/js/telegram-widget.js?22";
-      script.async = true;
-      script.setAttribute(
-        "data-telegram-login",
-        process.env.NEXT_PUBLIC_BOT_USERNAME!
-      );
-      script.setAttribute("data-size", "large");
-      script.setAttribute("data-auth-url", "/api/auth/telegram"); // ✅ Next.js API route
-      document.getElementById("telegram-login")?.appendChild(script);
-    }, []);
-    if (res.ok) router.push("/");
-    else alert("Login failed");
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setTimeout(() => setIsLoading(false), 2000); // simulate API call
+  };
+  const handleAuth = async (user: any) => {
+    try {
+      // Send user data to your API for validation
+      const res = await fetch("/api/auth/telegram", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(user),
+      });
+
+      const data = await res.json();
+      console.log("Auth Response:", data);
+
+      if (data.user) {
+        alert(`Welcome ${data.user.first_name}!`);
+      } else {
+        alert("Authentication failed");
+      }
+    } catch (err) {
+      console.error("Error during Telegram login:", err);
+    }
   };
 
   return (
@@ -156,7 +155,16 @@ export default function LoginPage() {
                     {/* Telegram Auth */}{" "}
                     <div className="flex justify-center mt-6">
                       {" "}
-                      <div id="telegram-login"></div>{" "}
+                      <LoginButton
+                        botUsername={
+                          process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME!
+                        }
+                        onAuthCallback={handleAuth} // 🔥 handles login result
+                        buttonSize="large"
+                        cornerRadius={8}
+                        showAvatar={true}
+                        lang="en"
+                      />{" "}
                     </div>
                   </div>
                 </div>

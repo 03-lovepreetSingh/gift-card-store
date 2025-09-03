@@ -1,47 +1,22 @@
 import { NextResponse } from "next/server";
-import crypto from "crypto";
+import { AuthDataValidator } from "@telegram-auth/server";
 
-export async function GET(req: Request) {
-  const url = new URL(req.url);
-  const params = Object.fromEntries(url.searchParams);
+export async function POST(req: Request) {
+  const body = await req.json();
 
-  const { hash, ...authData } = params;
-  if (!hash) {
-    return NextResponse.json({ error: "Missing hash" }, { status: 400 });
-  }
+  const validator = new AuthDataValidator({
+    botToken: process.env.BOT_TOKEN!,
+  });
 
-  // Step 1: Rebuild the check string
-  const dataCheckArr = Object.keys(authData)
-    .sort()
-    .map((key) => `${key}=${authData[key]}`);
-  const dataCheckString = dataCheckArr.join("\n");
-
-  // Step 2: Compute secret key from BOT_TOKEN
-  const secretKey = crypto
-    .createHash("sha256")
-    .update(process.env.BOT_TOKEN!)
-    .digest("hex"); // returns string
-
-  const computedHash = crypto
-    .createHmac("sha256", secretKey) // string is valid
-    .update(dataCheckString)
-    .digest("hex");
-
-  // Step 3: Compare
-  if (computedHash !== hash) {
+  try {
+    const user = await validator.validate(body);
+    // ✅ Save in DB, issue JWT or session cookie here
+    console.log("Authenticated user:", user);
+    return NextResponse.json({ success: true, user });
+  } catch (error) {
     return NextResponse.json(
-      { error: "Data is NOT from Telegram" },
-      { status: 403 }
+      { success: false, error: "Invalid Telegram auth" },
+      { status: 401 }
     );
   }
-
-  // Step 4: Expiry check
-  const authDate = parseInt(authData.auth_date, 10);
-  if (Date.now() / 1000 - authDate > 86400) {
-    return NextResponse.json({ error: "Data is outdated" }, { status: 403 });
-  }
-
-  // ✅ Valid user
-  // Instead of setcookie (like PHP), issue a JWT or session
-  return NextResponse.json({ user: authData });
 }
