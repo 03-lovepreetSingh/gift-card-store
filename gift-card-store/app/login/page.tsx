@@ -157,7 +157,8 @@ export default function LoginPage() {
                       {" "}
                       <LoginButton
                         botUsername={
-                          process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME!
+                          process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME ||
+                          "LovepreetSingh_bot"
                         }
                         onAuthCallback={handleAuth} // 🔥 handles login result
                         buttonSize="large"
