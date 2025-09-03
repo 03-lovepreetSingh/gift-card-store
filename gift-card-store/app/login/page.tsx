@@ -34,7 +34,7 @@ export default function LoginPage() {
     try {
       // Send user data to your API for validation
       const res = await fetch("/api/auth/telegram", {
-        method: "POST",
+        method: "GET",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user),
       });
