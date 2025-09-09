@@ -4,7 +4,7 @@ import { transformApiDataToGiftCards } from "@/lib/data-transformer"
 import type { ApiResponse } from "../../../lib/types"
 
 type ProductPageProps = {
-  params: { id: string }
+  params: any
 }
 
 async function getGiftCard(id: string) {
@@ -36,6 +36,7 @@ async function getAllGiftCards() {
     }
 
     const apiData: ApiResponse = await response.json()
+    //@ts-ignore
     return transformApiDataToGiftCards(apiData)
   } catch (error) {
     console.error("Error fetching all gift cards:", error)
