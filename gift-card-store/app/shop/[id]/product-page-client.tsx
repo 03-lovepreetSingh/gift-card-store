@@ -1,54 +1,41 @@
 // app/shop/[id]/product-page-client.tsx  (Client Component)
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
-import {
-  ArrowLeft,
-  ShoppingCart,
-  Plus,
-  Minus,
-  Shield,
-  Zap,
-  Globe,
-  Star,
-} from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { useToast } from "@/hooks/use-toast"
+import { ArrowLeft, ShoppingCart, Plus, Minus, Shield, Zap, Globe, Star } from "lucide-react"
+import Image from "next/image"
+import Link from "next/link"
 
 export default function ProductPageClient({
   giftCard,
   allCards,
 }: {
-  giftCard: any;
-  allCards: any[];
+  giftCard: any
+  allCards: any[]
 }) {
-  const [quantity, setQuantity] = useState(1);
-  const { toast } = useToast();
+  const [quantity, setQuantity] = useState(1)
+  const { toast } = useToast()
 
   const relatedCards = allCards
-    .filter(
-      (card) => card.category === giftCard.category && card.id !== giftCard.id
-    )
-    .slice(0, 4);
+    .filter((card) => card.category === giftCard.category && card.id !== giftCard.id)
+    .slice(0, 4)
 
   const handleAddToCart = () => {
     toast({
       title: "Added to cart",
-      description: `${quantity} ${giftCard.brand} gift card${
-        quantity > 1 ? "s" : ""
-      } added to your cart.`,
-    });
-  };
+      description: `${quantity} ${giftCard.brand} gift card${quantity > 1 ? "s" : ""} added to your cart.`,
+    })
+  }
 
-  const totalPrice = giftCard.price * quantity;
-  const totalCrypto = (parseFloat(giftCard.cryptoPrice) * quantity).toFixed(3);
+  const totalPrice = giftCard.price * quantity
+  const totalCrypto = (Number.parseFloat(giftCard.cryptoPrice) * quantity).toFixed(3)
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -66,12 +53,7 @@ export default function ProductPageClient({
         {/* Product Image */}
         <div className="space-y-4">
           <div className="aspect-square relative overflow-hidden rounded-lg bg-muted">
-            <Image
-              src={giftCard.image}
-              alt={giftCard.brand}
-              fill
-              className="object-cover"
-            />
+            <Image src={giftCard.image} alt={giftCard.brand} fill className="object-cover" />
             {giftCard.isPopular && (
               <Badge className="absolute top-4 left-4 bg-orange-500 hover:bg-orange-600">
                 <Star className="h-3 w-3 mr-1" />
@@ -99,21 +81,15 @@ export default function ProductPageClient({
                 <Badge variant="destructive">Out of Stock</Badge>
               )}
             </div>
-            <h1 className="text-3xl font-bold mb-4">
-              {giftCard.brand} Gift Card
-            </h1>
-            <p className="text-muted-foreground text-lg mb-4">
-              {giftCard.description}
-            </p>
+            <h1 className="text-3xl font-bold mb-4">{giftCard.brand} Gift Card</h1>
+            <p className="text-muted-foreground text-lg mb-4">{giftCard.description}</p>
           </div>
 
           {/* Pricing */}
           <div className="space-y-4">
             <div>
               <div className="text-3xl font-bold">${giftCard.denomination}</div>
-              <div className="text-lg text-muted-foreground">
-                {giftCard.cryptoPrice}
-              </div>
+              <div className="text-lg text-muted-foreground">{giftCard.cryptoPrice}</div>
             </div>
 
             <Separator />
@@ -134,9 +110,7 @@ export default function ProductPageClient({
                   id="quantity"
                   type="number"
                   value={quantity}
-                  onChange={(e) =>
-                    setQuantity(Math.max(1, parseInt(e.target.value) || 1))
-                  }
+                  onChange={(e) => setQuantity(Math.max(1, Number.parseInt(e.target.value) || 1))}
                   className="w-20 text-center"
                   min="1"
                   max="10"
@@ -158,9 +132,7 @@ export default function ProductPageClient({
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
                     <span>Subtotal:</span>
-                    <span className="font-semibold">
-                      ${totalPrice.toFixed(2)}
-                    </span>
+                    <span className="font-semibold">${totalPrice.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span>Crypto Price:</span>
@@ -172,19 +144,12 @@ export default function ProductPageClient({
 
             {/* Add to Cart */}
             <div className="space-y-2">
-              <Button
-                onClick={handleAddToCart}
-                disabled={!giftCard.inStock}
-                size="lg"
-                className="w-full"
-              >
+              <Button onClick={handleAddToCart} disabled={!giftCard.inStock} size="lg" className="w-full">
                 <ShoppingCart className="h-5 w-5 mr-2" />
                 {giftCard.inStock ? "Add to Cart" : "Out of Stock"}
               </Button>
               {giftCard.inStock && (
-                <p className="text-sm text-muted-foreground text-center">
-                  Instant delivery after payment confirmation
-                </p>
+                <p className="text-sm text-muted-foreground text-center">Instant delivery after payment confirmation</p>
               )}
             </div>
           </div>
@@ -195,27 +160,21 @@ export default function ProductPageClient({
               <Shield className="h-5 w-5 text-green-600" />
               <div>
                 <div className="font-medium">Secure Purchase</div>
-                <div className="text-sm text-muted-foreground">
-                  Bank-level security
-                </div>
+                <div className="text-sm text-muted-foreground">Bank-level security</div>
               </div>
             </div>
             <div className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
               <Zap className="h-5 w-5 text-blue-600" />
               <div>
                 <div className="font-medium">Instant Delivery</div>
-                <div className="text-sm text-muted-foreground">
-                  Delivered to your email
-                </div>
+                <div className="text-sm text-muted-foreground">Delivered to your email</div>
               </div>
             </div>
             <div className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
               <Globe className="h-5 w-5 text-purple-600" />
               <div>
                 <div className="font-medium">Global Acceptance</div>
-                <div className="text-sm text-muted-foreground">
-                  Works worldwide
-                </div>
+                <div className="text-sm text-muted-foreground">Works worldwide</div>
               </div>
             </div>
           </div>
@@ -228,10 +187,7 @@ export default function ProductPageClient({
           <h2 className="text-2xl font-bold mb-6">Related Gift Cards</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {relatedCards.map((card) => (
-              <Card
-                key={card.id}
-                className="group overflow-hidden transition-all hover:shadow-lg"
-              >
+              <Card key={card.id} className="group overflow-hidden transition-all hover:shadow-lg">
                 <div className="aspect-square relative overflow-hidden">
                   <Image
                     src={card.image}
@@ -255,5 +211,5 @@ export default function ProductPageClient({
         </div>
       )}
     </div>
-  );
+  )
 }
