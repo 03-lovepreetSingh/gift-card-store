@@ -191,8 +191,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* CTA Section */}
+      {/* CTA Section updated the coment */}
       <section className="py-20 bg-neutral-500/10 text-white">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-2xl mx-auto space-y-6">
